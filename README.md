@@ -1,0 +1,1 @@
+First serverless app. Playing with AWS CDK, API Gateway, Lambda, DynamoDb.

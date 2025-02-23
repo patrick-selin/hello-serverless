@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
-import { HelloServerlessStack } from '../lib/hello-serverless-stack';
+import { HelloServerlessStack } from '../lib/cdk-todos-stack';
 
 const app = new cdk.App();
 new HelloServerlessStack(app, 'HelloServerlessStack', {

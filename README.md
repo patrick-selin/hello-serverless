@@ -15,5 +15,6 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
 
 NOTES:
+
 Create Go binary: GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap main.go   
 Set the Lambda Runtime settings -> handler: bootstrap

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"math/rand"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -18,6 +19,8 @@ func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 	switch request.HTTPMethod {
 	case "GET":
 		return getTodos()
+	case "POST":
+		return createTodo(request)
 	default:
 		return events.APIGatewayProxyResponse{StatusCode: 405}, nil
 	}
@@ -31,6 +34,19 @@ func getTodos() (events.APIGatewayProxyResponse, error) {
 	}
 	body, _ := json.Marshal(todos)
 	return events.APIGatewayProxyResponse{StatusCode: 200, Body: string(body)}, nil
+}
+
+func createTodo(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	var todo Todo
+	err := json.Unmarshal([]byte(request.Body), &todo)
+	if err != nil {
+		return events.APIGatewayProxyResponse{StatusCode: 400}, nil
+	}
+
+	todo.ID = "random-id"
+	todo.Num = rand.Intn(100)
+	body, _ := json.Marshal(todo)
+	return events.APIGatewayProxyResponse{StatusCode: 201, Body: string(body)}, nil
 }
 
 func main() {

@@ -35,10 +35,10 @@ func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 }
 
 func getTodos() (events.APIGatewayProxyResponse, error) {
-	// Dummy data
 	todos := []Todo{
 		{ID: "1", Text: "Learn Go", Num: 42},
 		{ID: "2", Text: "Build Serverless App", Num: 99},
+		{ID: "3", Text: "Stop Speaking Turku", Num: 33},
 	}
 	body, _ := json.Marshal(todos)
 	return events.APIGatewayProxyResponse{

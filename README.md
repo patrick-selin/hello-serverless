@@ -1,20 +1,26 @@
-# Welcome to your CDK TypeScript project
+# Serverless TODO App with Go, AWS Lambda, and CDK (TypeScript)
 
-This is a blank project for CDK development with TypeScript.
+This is a world simplest and unsafest serverless TODO application built with **Go** for the backend logic, deployed on **AWS Lambda**, and exposed through an **API Gateway (REST API)**. The infrastructure is provisioned using **AWS CDK (TypeScript)**.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## Overview
 
-## Useful commands
+This project demonstrates how to:
+- Build a serverless REST API with **GoLang**.
+- Deploy a **Go Lambda function** on AWS.
+- Expose the Lambda through **API Gateway** endpoints:
+  - `GET /todos`: Retrieve a list of todos.
+  - `POST /todos`: Create a new todo with a randomly generated number.
+- Provision and manage all infrastructure using **AWS CDK (TypeScript)**.
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `npx cdk deploy`  deploy this stack to your default AWS account/region
-* `npx cdk diff`    compare deployed stack with current state
-* `npx cdk synth`   emits the synthesized CloudFormation template
+## How It Works
+
+- `GET /todos`: Returns a hardcoded list of todos.
+- `POST /todos`: Accepts a JSON body to create a new todo with a randomly generated number.
 
 
-NOTES:
+## NOTES:
 
-Create Go binary: GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap main.go   
-Set the Lambda Runtime settings -> handler: bootstrap
+Create Go binary: 
+- GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap main.go   
+Set the Lambda Runtime settings -> handler: 
+- bootstrap

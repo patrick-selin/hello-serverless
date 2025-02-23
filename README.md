@@ -12,3 +12,8 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 * `npx cdk deploy`  deploy this stack to your default AWS account/region
 * `npx cdk diff`    compare deployed stack with current state
 * `npx cdk synth`   emits the synthesized CloudFormation template
+
+
+NOTES:
+Create Go binary: GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap main.go   
+Set the Lambda Runtime settings -> handler: bootstrap

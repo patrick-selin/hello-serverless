@@ -22,7 +22,15 @@ func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 	case "POST":
 		return createTodo(request)
 	default:
-		return events.APIGatewayProxyResponse{StatusCode: 405}, nil
+		return events.APIGatewayProxyResponse{
+			StatusCode: 405,
+			Body:       `{"error": "Method Not Allowed"}`,
+			Headers: map[string]string{
+				"Content-Type":                 "application/json",
+				"Access-Control-Allow-Origin":  "*",
+				"Access-Control-Allow-Methods": "GET, POST",
+			},
+		}, nil
 	}
 }
 
@@ -33,20 +41,45 @@ func getTodos() (events.APIGatewayProxyResponse, error) {
 		{ID: "2", Text: "Build Serverless App", Num: 99},
 	}
 	body, _ := json.Marshal(todos)
-	return events.APIGatewayProxyResponse{StatusCode: 200, Body: string(body)}, nil
+	return events.APIGatewayProxyResponse{
+		StatusCode: 200,
+		Body:       string(body),
+		Headers: map[string]string{
+			"Content-Type":                 "application/json",
+			"Access-Control-Allow-Origin":  "*",
+			"Access-Control-Allow-Methods": "GET, POST",
+		},
+	}, nil
 }
 
 func createTodo(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	var todo Todo
 	err := json.Unmarshal([]byte(request.Body), &todo)
 	if err != nil {
-		return events.APIGatewayProxyResponse{StatusCode: 400}, nil
+		return events.APIGatewayProxyResponse{
+			StatusCode: 400,
+			Body:       `{"error": "Invalid request body"}`,
+			Headers: map[string]string{
+				"Content-Type":                 "application/json",
+				"Access-Control-Allow-Origin":  "*",
+				"Access-Control-Allow-Methods": "GET, POST",
+			},
+		}, nil
 	}
 
 	todo.ID = "random-id"
 	todo.Num = rand.Intn(100)
+
 	body, _ := json.Marshal(todo)
-	return events.APIGatewayProxyResponse{StatusCode: 201, Body: string(body)}, nil
+	return events.APIGatewayProxyResponse{
+		StatusCode: 201,
+		Body:       string(body),
+		Headers: map[string]string{
+			"Content-Type":                 "application/json",
+			"Access-Control-Allow-Origin":  "*",
+			"Access-Control-Allow-Methods": "GET, POST",
+		},
+	}, nil
 }
 
 func main() {

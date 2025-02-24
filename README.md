@@ -20,7 +20,7 @@ This project demonstrates how to:
 
 ## NOTES:
 
-Create Go binary: 
-- GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap main.go   
-Set the Lambda Runtime settings -> handler: 
-- bootstrap
+- Create Go binary: 
+GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap main.go   
+- Set the Lambda Runtime settings -> handler: 
+bootstrap

@@ -40,5 +40,31 @@ export class CdkTodosStack extends cdk.Stack {
         allowMethods: ["GET", "POST"],
       },
     });
+
+    const todos = api.root.addResource("todos");
+
+    todos.addMethod("GET", new apigateway.LambdaIntegration(todosLambda, {
+      proxy: true,
+      integrationResponses: [
+        {
+          statusCode: "200",
+          responseParameters: {
+            "method.response.header.Access-Control-Allow-Origin": "'*'",
+          },
+        },
+      ],
+    }));
+
+    todos.addMethod("POST", new apigateway.LambdaIntegration(todosLambda, {
+      proxy: true,
+      integrationResponses: [
+        {
+          statusCode: "201",
+          responseParameters: {
+            "method.response.header.Access-Control-Allow-Origin": "'*'",
+          },
+        },
+      ],
+    }));
   }
 }

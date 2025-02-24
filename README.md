@@ -24,3 +24,36 @@ This project demonstrates how to:
 GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap main.go   
 - Set the Lambda Runtime settings -> handler: 
 bootstrap
+
+
+- Go things
+
+A type assertion with an "ok pattern"
+
+```
+if v, ok := item["id"].(*types.AttributeValueMemberS); ok {
+	todo.ID = v.Value
+}
+```
+
+Group Variable Declaration Block
+
+```
+var dynamoClient *dynamodb.Client
+var tableName = "TodosTable"
+```
+
+Multiple Assignment in Go
+```
+variable1, variable2 := functionCall()
+cfg, err := config.LoadDefaultConfig(context.TODO())
+
+```
+
+Error Handling Pattern:
+```
+if err != nil {
+    // Handle the error (e.g., log it, return an error response, etc.)
+    panic("unable to load SDK config, " + err.Error())
+}
+```

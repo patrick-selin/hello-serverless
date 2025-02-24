@@ -1,6 +1,6 @@
 # Serverless TODO App with Go, AWS Lambda, and CDK (TypeScript)
 
-This is a world simplest and unsafest serverless TODO application built with **Go** for the backend logic, deployed on **AWS Lambda**, and exposed through an **API Gateway (REST API)**. The infrastructure is provisioned using **AWS CDK (TypeScript)**.
+This is a world simplest and unsafest serverless TODO application built with **Go** for the backend logic, deployed on **AWS Lambda**, and exposed through an **API Gateway (REST API)**. The todos are stored in DynamoDB, and the infrastructure is provisioned using AWS CDK (TypeScript).
 
 ![Image](https://github.com/user-attachments/assets/6e7e6757-ad4c-4a41-8600-fb9ddbe12a28)
 
@@ -9,15 +9,16 @@ This is a world simplest and unsafest serverless TODO application built with **G
 This project demonstrates how to:
 - Build a serverless REST API with **GoLang**.
 - Deploy a **Go Lambda function** on AWS.
+- Store and retrieve data in DynamoDB.
 - Expose the Lambda through **API Gateway** endpoints:
-  - `GET /todos`: Retrieve a list of todos.
-  - `POST /todos`: Create a new todo with a randomly generated number.
+  - `GET /todos`: Retrieve a list of todos from DynamoDB.
+  - `POST /todos`: Create a new todo in DynamoDB with a randomly generated number.
 - Provision and manage all infrastructure using **AWS CDK (TypeScript)**.
 
 ## How It Works
 
-- `GET /todos`: Returns a hardcoded list of todos.
-- `POST /todos`: Accepts a JSON body to create a new todo with a randomly generated number.
+- `GET /todos`: Scans the DynamoDB table to retrieve all todos. Returns the list as a JSON array.
+- `POST /todos`: Accepts a JSON body to create a new todo. Adds a randomly generated number (Num field) to the todo. Stores the todo as an item in DynamoDB.
 
 
 ## RANDOM NOTES:
@@ -83,8 +84,11 @@ if err != nil {
 
 Iltaluettevaa:
 
-AWS SDK GO v2
+AWS SDK GO v2 DOCS
 https://pkg.go.dev/github.com/aws/aws-sdk-go-v2
 
-AWS CDK v2
+AWS CDK v2 DOCS
 https://docs.aws.amazon.com/cdk/api/v2/
+
+AWS CDK DEV GUIDE
+https://docs.aws.amazon.com/cdk/v2/guide/home.html

@@ -1,6 +1,7 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as lambda from "aws-cdk-lib/aws-lambda";
+import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import * as path from "path";
 
 export class CdkTodosStack extends cdk.Stack {
@@ -29,6 +30,15 @@ export class CdkTodosStack extends cdk.Stack {
           },
         },
       }),
+    });
+
+    const api = new apigateway.RestApi(this, "TodosApi", {
+      restApiName: "Todos Service",
+      description: "This service serves todos.",
+      defaultCorsPreflightOptions: {
+        allowOrigins: apigateway.Cors.ALL_ORIGINS,
+        allowMethods: ["GET", "POST"],
+      },
     });
   }
 }

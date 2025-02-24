@@ -24,6 +24,8 @@
     "@aws-cdk/aws-dynamodb": "^1.121.0",
     "@aws-cdk/aws-iam": "^1.149.0",
     "@aws-cdk/aws-lambda": "^1.19.0",
+    "@aws-sdk/client-dynamodb": "^3.751.0",
+    "@aws-sdk/util-dynamodb": "^3.751.0",
     "@swc/core": "^1.10.18",
     "aws-cdk-lib": "^2.179.0",
     "constructs": "^10.4.2"

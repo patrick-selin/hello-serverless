@@ -3,15 +3,16 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"math/rand"
 	"strconv"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	"github.com/aws/aws-sdk-go/aws"
 )
 
 type Todo struct {
@@ -84,7 +85,15 @@ func getTodos() (events.APIGatewayProxyResponse, error) {
 	}
 	
 	body, _ := json.Marshal(todos)
-	return events.APIGatewayProxyResponse{StatusCode: 200, Body: string(body)}, nil
+	return events.APIGatewayProxyResponse{
+		StatusCode: 200,
+		Body:       string(body),
+		Headers: map[string]string{
+			"Content-Type":                 "application/json",
+			"Access-Control-Allow-Origin":  "*",
+			"Access-Control-Allow-Methods": "GET, POST",
+		},
+	}, nil
 }
 
 func createTodo(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -101,9 +110,29 @@ func createTodo(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRe
 			},
 		}, nil
 	}
-
-	todo.ID = "random-id"
+	
+	todo.ID = fmt.Sprintf("%d", rand.Intn(1000000))
 	todo.Num = rand.Intn(100)
+
+	_, err = dynamoClient.PutItem(context.TODO(), &dynamodb.PutItemInput{
+		TableName: aws.String(tableName),
+		Item: map[string]types.AttributeValue{
+			"id":   &types.AttributeValueMemberS{Value: todo.ID},
+			"text": &types.AttributeValueMemberS{Value: todo.Text},
+			"num":  &types.AttributeValueMemberN{Value: fmt.Sprintf("%d", todo.Num)},
+		},
+	})
+	if err != nil {
+		return events.APIGatewayProxyResponse{
+			StatusCode: 500,
+			Body:       err.Error(),
+			Headers: map[string]string{
+				"Content-Type":                 "application/json",
+				"Access-Control-Allow-Origin":  "*",
+				"Access-Control-Allow-Methods": "GET, POST",
+			},
+		}, nil
+	}
 
 	body, _ := json.Marshal(todo)
 	return events.APIGatewayProxyResponse{

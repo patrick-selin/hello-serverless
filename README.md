@@ -26,9 +26,10 @@ GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap main.go
 bootstrap
 
 
-- Go things
+- Go jutut
 
 A type assertion with an "ok pattern"
+In Go, a type assertion allows you to extract the underlying value from an interface.
 
 ```
 if v, ok := item["id"].(*types.AttributeValueMemberS); ok {
@@ -39,6 +40,13 @@ if v, ok := item["id"].(*types.AttributeValueMemberS); ok {
 Group Variable Declaration Block
 
 ```
+var (
+	dynamoClient *dynamodb.Client
+	tableName    = "TodosTable"
+)
+
+on sama kuin
+
 var dynamoClient *dynamodb.Client
 var tableName = "TodosTable"
 ```

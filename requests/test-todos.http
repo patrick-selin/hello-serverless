@@ -7,5 +7,5 @@ POST https://8mnjosxixc.execute-api.eu-north-1.amazonaws.com/prod/todos
 Content-Type: application/json
 
 {
-  "text": "My First AWS Lambda"
+  "text": "Kolmas kerta toden sanoo"
 }

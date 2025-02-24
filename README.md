@@ -2,6 +2,8 @@
 
 This is a world simplest and unsafest serverless TODO application built with **Go** for the backend logic, deployed on **AWS Lambda**, and exposed through an **API Gateway (REST API)**. The infrastructure is provisioned using **AWS CDK (TypeScript)**.
 
+![Image](https://github.com/user-attachments/assets/6e7e6757-ad4c-4a41-8600-fb9ddbe12a28)
+
 ## Overview
 
 This project demonstrates how to:
@@ -18,14 +20,26 @@ This project demonstrates how to:
 - `POST /todos`: Accepts a JSON body to create a new todo with a randomly generated number.
 
 
-## NOTES:
+## RANDOM NOTES:
 
 - Create Go binary: 
-GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap main.go   
+GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap main.go
+- Zip for Lambda   
+zip function.zip bootstrap
 - Set the Lambda Runtime settings -> handler: 
 bootstrap
+- Uplod to AWS using CLI (kayta CDK jatakossa?)
+aws lambda update-function-code \
+  --function-name CdkTodosStack-TodosFunctionDE625C1E-2PjcztblBhYz \
+  --zip-file fileb://function.zip
+- Test the Lambda using CLI
+aws lambda invoke \
+  --function-name CdkTodosStack-TodosFunctionDE625C1E-2PjcztblBhYz \
+  --payload '{}' \
+  response.json
 
 
+## GO LANGUAGE NOTES:
 - Go jutut
 
 A type assertion with an "ok pattern"
@@ -65,3 +79,12 @@ if err != nil {
     panic("unable to load SDK config, " + err.Error())
 }
 ```
+
+
+Iltaluettevaa:
+
+AWS SDK GO v2
+https://pkg.go.dev/github.com/aws/aws-sdk-go-v2
+
+AWS CDK v2
+https://docs.aws.amazon.com/cdk/api/v2/

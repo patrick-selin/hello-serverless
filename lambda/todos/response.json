@@ -1,0 +1,1 @@
+{"statusCode":405,"headers":{"Access-Control-Allow-Methods":"GET, POST","Access-Control-Allow-Origin":"*","Content-Type":"application/json"},"multiValueHeaders":null,"body":"{\"error\": \"Method Not Allowed\"}"}

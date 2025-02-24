@@ -2,6 +2,9 @@ import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as apigateway from "aws-cdk-lib/aws-apigateway";
+import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
+import * as iam from "aws-cdk-lib/aws-iam";
+
 import * as path from "path";
 
 export class CdkTodosStack extends cdk.Stack {
@@ -31,6 +34,14 @@ export class CdkTodosStack extends cdk.Stack {
         },
       }),
     });
+
+    const todosTable = new dynamodb.Table(this, "TodosTable", {
+      partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
+      removalPolicy: cdk.RemovalPolicy.DESTROY, // NOT for production
+    });
+
+    todosTable.grantReadWriteData(todosLambda);
+    todosLambda.addEnvironment("TABLE_NAME", todosTable.tableName);
 
     const api = new apigateway.RestApi(this, "TodosApi", {
       restApiName: "Todos Service",

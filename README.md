@@ -29,7 +29,7 @@ GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap main.go
 zip function.zip bootstrap
 - Set the Lambda Runtime settings -> handler: 
 bootstrap
-- Uplod to AWS using CLI (kayta CDK jatakossa?)
+- Uplod to AWS using CLI (kayta CDK jatkossa)
 aws lambda update-function-code \
   --function-name CdkTodosStack-TodosFunctionDE625C1E-2PjcztblBhYz \
   --zip-file fileb://function.zip

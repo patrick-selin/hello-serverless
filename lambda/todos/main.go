@@ -4,15 +4,34 @@ import (
 	"context"
 	"encoding/json"
 	"math/rand"
+	"strconv"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/aws/aws-sdk-go/aws"
 )
 
 type Todo struct {
 	ID   string `json:"id"`
 	Text string `json:"text"`
 	Num  int    `json:"num"`
+}
+
+var (
+	dynamoClient *dynamodb.Client
+	tableName    = "TodosTable"
+)
+
+
+func init() {
+	cfg, err := config.LoadDefaultConfig(context.TODO())
+	if err != nil {
+		panic("unable to load SDK config, " + err.Error())
+	}
+	dynamoClient = dynamodb.NewFromConfig(cfg)
 }
 
 func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -35,21 +54,37 @@ func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 }
 
 func getTodos() (events.APIGatewayProxyResponse, error) {
-	todos := []Todo{
-		{ID: "1", Text: "Learn Go", Num: 42},
-		{ID: "2", Text: "Build Serverless App", Num: 99},
-		{ID: "3", Text: "Stop Speaking Turku", Num: 33},
+	out, err := dynamoClient.Scan(context.TODO(), &dynamodb.ScanInput{
+		TableName: aws.String(tableName),
+	})
+	if err != nil {
+		return events.APIGatewayProxyResponse{StatusCode: 500, Body: err.Error()}, nil
 	}
+
+	var todos []Todo
+	for _, item := range out.Items {
+		var todo Todo
+	
+		if v, ok := item["id"].(*types.AttributeValueMemberS); ok {
+			todo.ID = v.Value
+		}
+	
+		if v, ok := item["text"].(*types.AttributeValueMemberS); ok {
+			todo.Text = v.Value
+		}
+	
+		if v, ok := item["num"].(*types.AttributeValueMemberN); ok {
+			num, err := strconv.Atoi(v.Value)
+			if err == nil {
+				todo.Num = num
+			}
+		}
+	
+		todos = append(todos, todo)
+	}
+	
 	body, _ := json.Marshal(todos)
-	return events.APIGatewayProxyResponse{
-		StatusCode: 200,
-		Body:       string(body),
-		Headers: map[string]string{
-			"Content-Type":                 "application/json",
-			"Access-Control-Allow-Origin":  "*",
-			"Access-Control-Allow-Methods": "GET, POST",
-		},
-	}, nil
+	return events.APIGatewayProxyResponse{StatusCode: 200, Body: string(body)}, nil
 }
 
 func createTodo(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
